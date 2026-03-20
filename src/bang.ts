@@ -20,14 +20,6 @@ export const bangs = [
   },
   {
     c: "Online Services",
-    d: "google.com",
-    s: "Google Images",
-    sc: "Google",
-    t: "gi",
-    u: "https://google.com/search?tbm=isch&q={{{s}}}&tbs=imgo:1",
-  },
-  {
-    c: "Online Services",
     d: "www.qwant.com",
     s: "Qwant",
     sc: "Search",
