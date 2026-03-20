@@ -57,6 +57,11 @@ function noSearchDefaultPageRender() {
             </tbody>
           </table>
         </section>
+
+        <section class="default-section">
+          <span class="default-label">Default:</span>
+          ${bangs.map((b) => `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}" data-t="${b.t}">!${b.t}</button>`).join("")}
+        </section>
       </main>
 
       <footer class="footer">
@@ -75,6 +80,14 @@ function noSearchDefaultPageRender() {
     setTimeout(() => {
       copyIcon.src = "/clipboard.svg";
     }, 2000);
+  });
+
+  app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      localStorage.setItem("default-bang", btn.dataset.t!);
+      app.querySelectorAll(".default-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
   });
 }
 
