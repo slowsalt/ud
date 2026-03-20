@@ -5,18 +5,67 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js");
 }
 
+// ─── CUSTOM BANGS ───
+
+const CUSTOM_BANGS_KEY = "custom-bangs";
+
+type Bang = { t: string; s: string; d: string; u: string };
+
+function loadCustomBangs(): Bang[] {
+  try {
+    return JSON.parse(localStorage.getItem(CUSTOM_BANGS_KEY) ?? "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomBangs(customs: Bang[]) {
+  localStorage.setItem(CUSTOM_BANGS_KEY, JSON.stringify(customs));
+}
+
+function findBang(trigger: string): Bang | undefined {
+  const customs = loadCustomBangs();
+  return customs.find((b) => b.t === trigger) ?? bangs.find((b) => b.t === trigger);
+}
+
+// ─── HOMEPAGE ───
+
+const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "qwant";
+
 function noSearchDefaultPageRender() {
   const app = document.querySelector<HTMLDivElement>("#app")!;
+  const customs = loadCustomBangs();
+  const customTriggers = new Set(customs.map((b) => b.t));
 
-  const bangRows = bangs
+  const customRows = customs
     .map(
       (b) => `
-      <tr>
+      <tr class="custom-row">
         <td><code class="bang-trigger">!${b.t}</code></td>
         <td>${b.s}</td>
         <td class="bang-domain">${b.d}</td>
+        <td class="bang-delete-cell">
+          <button class="delete-btn" data-t="${b.t}" aria-label="Remove !${b.t}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+            </svg>
+          </button>
+        </td>
       </tr>`
     )
+    .join("");
+
+  const builtInRows = bangs
+    .map((b) => {
+      const overridden = customTriggers.has(b.t);
+      return `
+      <tr class="${overridden ? "overridden-row" : ""}">
+        <td><code class="bang-trigger">!${b.t}</code></td>
+        <td>${b.s}${overridden ? ' <span class="overridden-badge">overridden</span>' : ""}</td>
+        <td class="bang-domain">${b.d}</td>
+        <td></td>
+      </tr>`;
+    })
     .join("");
 
   app.innerHTML = `
@@ -50,18 +99,44 @@ function noSearchDefaultPageRender() {
                 <th>Bang</th>
                 <th>Site</th>
                 <th class="bang-domain">Domain</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              ${bangRows}
+              ${customRows}${builtInRows}
             </tbody>
           </table>
         </section>
 
         <section class="default-section">
           <span class="default-label">Default:</span>
-          ${bangs.map((b) => `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}" data-t="${b.t}">!${b.t}</button>`).join("")}
+          ${[...customs, ...bangs].map((b) => `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}" data-t="${b.t}">!${b.t}</button>`).join("")}
         </section>
+
+        <details class="add-bang-details">
+          <summary class="add-bang-summary">Add a custom bang</summary>
+          <form class="add-bang-form" id="add-bang-form">
+            <div class="add-bang-fields">
+              <div class="add-bang-field">
+                <label class="add-bang-label" for="new-trigger">Trigger</label>
+                <div class="trigger-input-wrap">
+                  <span class="trigger-prefix">!</span>
+                  <input id="new-trigger" class="add-bang-input" type="text" placeholder="mytrigger" autocomplete="off" spellcheck="false" />
+                </div>
+              </div>
+              <div class="add-bang-field add-bang-field--grow">
+                <label class="add-bang-label" for="new-url">URL <span class="add-bang-hint">use <code>{{{s}}}</code> for the search query</span></label>
+                <input id="new-url" class="add-bang-input" type="text" placeholder="https://example.com/search?q={{{s}}}" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="add-bang-field">
+                <label class="add-bang-label" for="new-name">Name <span class="add-bang-hint">optional</span></label>
+                <input id="new-name" class="add-bang-input" type="text" placeholder="My Site" autocomplete="off" />
+              </div>
+            </div>
+            <p class="add-bang-error" id="add-bang-error"></p>
+            <button type="submit" class="add-bang-submit">Add bang</button>
+          </form>
+        </details>
       </main>
 
       <footer class="footer">
@@ -70,18 +145,17 @@ function noSearchDefaultPageRender() {
     </div>
   `;
 
+  // copy button
   const copyButton = app.querySelector<HTMLButtonElement>(".copy-button")!;
   const copyIcon = copyButton.querySelector("img")!;
   const urlInput = app.querySelector<HTMLInputElement>(".url-input")!;
-
   copyButton.addEventListener("click", async () => {
     await navigator.clipboard.writeText(urlInput.value);
     copyIcon.src = "/clipboard-check.svg";
-    setTimeout(() => {
-      copyIcon.src = "/clipboard.svg";
-    }, 2000);
+    setTimeout(() => { copyIcon.src = "/clipboard.svg"; }, 2000);
   });
 
+  // default selector
   app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       localStorage.setItem("default-bang", btn.dataset.t!);
@@ -89,10 +163,46 @@ function noSearchDefaultPageRender() {
       btn.classList.add("active");
     });
   });
+
+  // delete custom bang
+  app.querySelectorAll<HTMLButtonElement>(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const t = btn.dataset.t!;
+      const updated = loadCustomBangs().filter((b) => b.t !== t);
+      saveCustomBangs(updated);
+      noSearchDefaultPageRender();
+    });
+  });
+
+  // add custom bang form
+  const form = app.querySelector<HTMLFormElement>("#add-bang-form")!;
+  const errorEl = app.querySelector<HTMLParagraphElement>("#add-bang-error")!;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    errorEl.textContent = "";
+
+    const t = (app.querySelector<HTMLInputElement>("#new-trigger")!.value.trim().replace(/^!/, "").toLowerCase());
+    const u = app.querySelector<HTMLInputElement>("#new-url")!.value.trim();
+    const sRaw = app.querySelector<HTMLInputElement>("#new-name")!.value.trim();
+
+    if (!t) { errorEl.textContent = "Trigger is required."; return; }
+    if (!/^\S+$/.test(t)) { errorEl.textContent = "Trigger cannot contain spaces."; return; }
+    if (!u) { errorEl.textContent = "URL is required."; return; }
+    if (!u.includes("{{{s}}}")) { errorEl.textContent = 'URL must contain {{{s}}} as the search placeholder.'; return; }
+
+    let d = u;
+    try { d = new URL(u.replace("{{{s}}}", "x")).hostname; } catch { /* keep raw */ }
+
+    const s = sRaw || d;
+    const customs = loadCustomBangs().filter((b) => b.t !== t); // replace if same trigger
+    saveCustomBangs([...customs, { t, s, d, u }]);
+    noSearchDefaultPageRender();
+    // re-open the details so the user sees their new bang in context
+  });
 }
 
-const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "qwant";
-const defaultBang = bangs.find((b) => b.t === LS_DEFAULT_BANG);
+// ─── REDIRECT ───
 
 function getBangredirectUrl() {
   const url = new URL(window.location.href);
@@ -103,27 +213,19 @@ function getBangredirectUrl() {
   }
 
   const match = query.match(/!(\S+)/i);
-
   const bangCandidate = match?.[1]?.toLowerCase();
-  const selectedBang = bangs.find((b) => b.t === bangCandidate) ?? defaultBang;
+  const selectedBang = findBang(bangCandidate ?? "") ?? findBang(LS_DEFAULT_BANG);
 
-  // Remove the first bang from the query
   const cleanQuery = query.replace(/!\S+\s*/i, "").trim();
 
-  // If the query is just `!gh`, use `github.com` instead of `github.com/search?q=`
   if (cleanQuery === "")
     return selectedBang ? `https://${selectedBang.d}` : null;
 
-  // Format of the url is:
-  // https://www.google.com/search?q={{{s}}}
   const searchUrl = selectedBang?.u.replace(
     "{{{s}}}",
-    // Replace %2F with / to fix formats like "!ghr+t3dotgg/unduck"
     encodeURIComponent(cleanQuery).replace(/%2F/g, "/"),
   );
-  if (!searchUrl) return null;
-
-  return searchUrl;
+  return searchUrl ?? null;
 }
 
 function doRedirect() {
