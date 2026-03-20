@@ -1,31 +1,68 @@
 import { bangs } from "./bang";
 import "./global.css";
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js");
+}
+
 function noSearchDefaultPageRender() {
   const app = document.querySelector<HTMLDivElement>("#app")!;
+
+  const bangRows = bangs
+    .map(
+      (b) => `
+      <tr>
+        <td><code class="bang-trigger">!${b.t}</code></td>
+        <td>${b.s}</td>
+        <td class="bang-domain">${b.d}</td>
+      </tr>`
+    )
+    .join("");
+
   app.innerHTML = `
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
-      <div class="content-container">
-        <h1>Ud: A trimmed Unduck clone with Qwant as the main search engine and a trimmed number of !bangs</h1>
-        <p>DuckDuckGo's bang redirects are too slow. Add the following URL as a custom search engine to your browser. Enables <a href="https://duckduckgo.com/bang.html" target="_blank">all of DuckDuckGo's bangs.</a></p>
-        <div class="url-container"> 
-          <input 
-            type="text" 
-            class="url-input"
-            value="https://ud.jon.gl/?q=%s"
-            readonly 
-          />
-          <button class="copy-button">
-            <img src="/clipboard.svg" alt="Copy" />
-          </button>
-        </div>
-      </div>
+    <div class="page">
+      <main class="main">
+        <header class="site-header">
+          <h1 class="site-title">Ud</h1>
+          <p class="site-desc">Fast bang redirects. Add as a custom search engine in your browser.</p>
+        </header>
+
+        <section class="url-section">
+          <div class="url-container">
+            <input
+              type="text"
+              class="url-input"
+              value="https://ud.jon.gl/?q=%s"
+              readonly
+              aria-label="Search engine URL"
+            />
+            <button class="copy-button" aria-label="Copy URL">
+              <img src="/clipboard.svg" alt="" />
+            </button>
+          </div>
+        </section>
+
+        <section class="bangs-section">
+          <h2 class="section-heading">Available bangs</h2>
+          <table class="bang-table">
+            <thead>
+              <tr>
+                <th>Bang</th>
+                <th>Site</th>
+                <th class="bang-domain">Domain</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${bangRows}
+            </tbody>
+          </table>
+        </section>
+      </main>
+
       <footer class="footer">
-        <a href="https://t3.chat" target="_blank">t3.chat</a>
+        <a href="https://github.com/t3dotgg/unduck" target="_blank">based on unduck</a>
         •
-        <a href="https://x.com/theo" target="_blank">theo</a>
-        •
-        <a href="https://github.com/t3dotgg/unduck" target="_blank">github</a>
+        <a href="https://github.com/jonhilgart22/ud" target="_blank">source</a>
       </footer>
     </div>
   `;
@@ -37,7 +74,6 @@ function noSearchDefaultPageRender() {
   copyButton.addEventListener("click", async () => {
     await navigator.clipboard.writeText(urlInput.value);
     copyIcon.src = "/clipboard-check.svg";
-
     setTimeout(() => {
       copyIcon.src = "/clipboard.svg";
     }, 2000);
