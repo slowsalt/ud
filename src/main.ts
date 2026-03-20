@@ -140,6 +140,8 @@ function noSearchDefaultPageRender() {
       </main>
 
       <footer class="footer">
+        <a href="https://jon.gl" target="_blank">jon.gl</a>
+        •
         <a href="https://github.com/t3dotgg/unduck" target="_blank">based on unduck</a>
       </footer>
     </div>
