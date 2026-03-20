@@ -61,8 +61,6 @@ function noSearchDefaultPageRender() {
 
       <footer class="footer">
         <a href="https://github.com/t3dotgg/unduck" target="_blank">based on unduck</a>
-        •
-        <a href="https://github.com/jonhilgart22/ud" target="_blank">source</a>
       </footer>
     </div>
   `;
