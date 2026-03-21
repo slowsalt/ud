@@ -223,6 +223,16 @@ a:hover {
   opacity: 0.35;
 }
 
+.default-badge {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
 .overridden-badge {
   font-size: 10px;
   font-weight: 400;

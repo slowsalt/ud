@@ -230,7 +230,7 @@ function noSearchDefaultPageRender() {
     .map(
       (b) => `
       <tr class="custom-row">
-        <td><code class="bang-trigger">!${esc(b.t)}</code></td>
+        <td><code class="bang-trigger">!${esc(b.t)}</code>${b.t === LS_DEFAULT_BANG ? ' <span class="default-badge">default</span>' : ""}</td>
         <td>${esc(b.s)}</td>
         <td class="bang-domain">${esc(b.d)}</td>
         <td class="bang-delete-cell">
@@ -249,7 +249,7 @@ function noSearchDefaultPageRender() {
       const overridden = customTriggers.has(b.t);
       return `
       <tr class="${overridden ? "overridden-row" : ""}">
-        <td><code class="bang-trigger">!${esc(b.t)}</code></td>
+        <td><code class="bang-trigger">!${esc(b.t)}</code>${b.t === LS_DEFAULT_BANG ? ' <span class="default-badge">default</span>' : ""}</td>
         <td>${esc(b.s)}${overridden ? ' <span class="overridden-badge">overridden</span>' : ""}</td>
         <td class="bang-domain">${esc(b.d)}</td>
         <td></td>
