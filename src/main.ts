@@ -229,7 +229,7 @@ function noSearchDefaultPageRender() {
   const customRows = [...customs].sort((a, b) => a.t.localeCompare(b.t))
     .map(
       (b) => `
-      <tr class="custom-row">
+      <tr class="custom-row" data-t="${esc(b.t)}">
         <td><code class="bang-trigger">!${esc(b.t)}</code>${b.t === LS_DEFAULT_BANG ? ' <span class="default-badge">default</span>' : ""}</td>
         <td>${esc(b.s)}</td>
         <td class="bang-domain">${esc(b.d)}</td>
@@ -248,7 +248,7 @@ function noSearchDefaultPageRender() {
     .map((b) => {
       const overridden = customTriggers.has(b.t);
       return `
-      <tr class="${overridden ? "overridden-row" : ""}">
+      <tr class="${overridden ? "overridden-row" : ""}" data-t="${esc(b.t)}">
         <td><code class="bang-trigger">!${esc(b.t)}</code>${b.t === LS_DEFAULT_BANG ? ' <span class="default-badge">default</span>' : ""}</td>
         <td>${esc(b.s)}${overridden ? ' <span class="overridden-badge">overridden</span>' : ""}</td>
         <td class="bang-domain">${esc(b.d)}</td>
@@ -376,21 +376,30 @@ function noSearchDefaultPageRender() {
   });
 
   // default selector
+  function updateDefaultBadge(t: string) {
+    app.querySelectorAll<HTMLElement>(".bang-table .default-badge").forEach((el) => el.remove());
+    const row = app.querySelector<HTMLElement>(`.bang-table tr[data-t="${t}"]`);
+    row?.querySelector("td")?.insertAdjacentHTML("beforeend", '<span class="default-badge">default</span>');
+  }
+
   const defaultSelect = app.querySelector<HTMLSelectElement>(".default-select");
   if (defaultSelect) {
     defaultSelect.addEventListener("change", () => {
       localStorage.setItem("default-bang", defaultSelect.value);
+      updateDefaultBadge(defaultSelect.value);
     });
   } else {
     app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        localStorage.setItem("default-bang", btn.dataset.t!);
+        const t = btn.dataset.t!;
+        localStorage.setItem("default-bang", t);
         app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((b) => {
           b.classList.remove("active");
           b.setAttribute("aria-pressed", "false");
         });
         btn.classList.add("active");
         btn.setAttribute("aria-pressed", "true");
+        updateDefaultBadge(t);
       });
     });
   }
