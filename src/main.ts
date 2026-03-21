@@ -300,10 +300,21 @@ function noSearchDefaultPageRender() {
 
         <div role="group" aria-labelledby="default-label" class="default-section">
           <span class="default-label" id="default-label">Default:</span>
-          ${[...customs, ...bangs].sort((a, b) => a.t.localeCompare(b.t)).map((b) => {
-            const overridden = customTriggers.has(b.t) && !customs.includes(b);
-            return `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}${overridden ? " overridden-default" : ""}" data-t="${esc(b.t)}" aria-pressed="${b.t === LS_DEFAULT_BANG}" ${overridden ? 'disabled aria-disabled="true"' : ""}>!${esc(b.t)}</button>`;
-          }).join("")}
+          ${(() => {
+            const allBangs = [...customs, ...bangs].sort((a, b) => a.t.localeCompare(b.t));
+            if (allBangs.length > 20) {
+              return `<select class="default-select" aria-labelledby="default-label">
+                ${allBangs.map((b) => {
+                  const overridden = customTriggers.has(b.t) && !customs.includes(b);
+                  return `<option value="${esc(b.t)}" ${b.t === LS_DEFAULT_BANG ? "selected" : ""} ${overridden ? "disabled" : ""}>!${esc(b.t)} — ${esc(b.s)}</option>`;
+                }).join("")}
+              </select>`;
+            }
+            return allBangs.map((b) => {
+              const overridden = customTriggers.has(b.t) && !customs.includes(b);
+              return `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}${overridden ? " overridden-default" : ""}" data-t="${esc(b.t)}" aria-pressed="${b.t === LS_DEFAULT_BANG}" ${overridden ? 'disabled aria-disabled="true"' : ""}>!${esc(b.t)}</button>`;
+            }).join("");
+          })()}
         </div>
 
         <details class="add-bang-details">
@@ -365,17 +376,24 @@ function noSearchDefaultPageRender() {
   });
 
   // default selector
-  app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      localStorage.setItem("default-bang", btn.dataset.t!);
-      app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((b) => {
-        b.classList.remove("active");
-        b.setAttribute("aria-pressed", "false");
-      });
-      btn.classList.add("active");
-      btn.setAttribute("aria-pressed", "true");
+  const defaultSelect = app.querySelector<HTMLSelectElement>(".default-select");
+  if (defaultSelect) {
+    defaultSelect.addEventListener("change", () => {
+      localStorage.setItem("default-bang", defaultSelect.value);
     });
-  });
+  } else {
+    app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        localStorage.setItem("default-bang", btn.dataset.t!);
+        app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((b) => {
+          b.classList.remove("active");
+          b.setAttribute("aria-pressed", "false");
+        });
+        btn.classList.add("active");
+        btn.setAttribute("aria-pressed", "true");
+      });
+    });
+  }
 
   // delete custom bang
   app.querySelectorAll<HTMLButtonElement>(".delete-btn").forEach((btn) => {

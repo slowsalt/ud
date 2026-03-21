@@ -342,6 +342,19 @@ a:hover {
   pointer-events: none;
 }
 
+.default-select {
+  font: inherit;
+  font-size: 13px;
+  font-family: ui-monospace, "Cascadia Mono", "Fira Code", monospace;
+  font-weight: 400;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  color: var(--text);
+  cursor: pointer;
+}
+
 /* ─── ADD BANG ─── */
 
 .add-bang-details {
