@@ -330,6 +330,12 @@ a:hover {
   background: var(--bg-subtle);
 }
 
+.default-btn.overridden-default {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ─── ADD BANG ─── */
 
 .add-bang-details {
