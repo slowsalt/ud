@@ -213,7 +213,7 @@ function noSearchDefaultPageRender() {
   const customs = loadCustomBangs();
   const customTriggers = new Set(customs.map((b) => b.t));
 
-  const customRows = customs
+  const customRows = [...customs].sort((a, b) => a.t.localeCompare(b.t))
     .map(
       (b) => `
       <tr class="custom-row">
@@ -231,7 +231,7 @@ function noSearchDefaultPageRender() {
     )
     .join("");
 
-  const builtInRows = bangs
+  const builtInRows = [...bangs].sort((a, b) => a.t.localeCompare(b.t))
     .map((b) => {
       const overridden = customTriggers.has(b.t);
       return `
