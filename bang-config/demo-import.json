@@ -1,9 +1,27 @@
 [
   {
+    "t": "brave",
+    "s": "Brave Search",
+    "d": "search.brave.com",
+    "u": "https://search.brave.com/search?q={{{s}}}"
+  },
+  {
+    "t": "bundlephobia",
+    "s": "Bundlephobia",
+    "d": "bundlephobia.com",
+    "u": "https://bundlephobia.com/package/{{{s}}}"
+  },
+  {
     "t": "cal",
     "s": "Google Calendar",
     "d": "calendar.google.com",
     "u": "https://calendar.google.com/calendar/r/search?q={{{s}}}"
+  },
+  {
+    "t": "caniuse",
+    "s": "Can I Use",
+    "d": "caniuse.com",
+    "u": "https://caniuse.com/?search={{{s}}}"
   },
   {
     "t": "cf",
@@ -24,10 +42,22 @@
     "u": "https://crates.io/search?q={{{s}}}"
   },
   {
-    "t": "excali",
-    "s": "Excalidraw",
-    "d": "excalidraw.com",
-    "u": "https://excalidraw.com/#{{{s}}}"
+    "t": "ddg",
+    "s": "DuckDuckGo",
+    "d": "duckduckgo.com",
+    "u": "https://duckduckgo.com/?q={{{s}}}"
+  },
+  {
+    "t": "devdocs",
+    "s": "DevDocs",
+    "d": "devdocs.io",
+    "u": "https://devdocs.io/#q={{{s}}}"
+  },
+  {
+    "t": "dict",
+    "s": "Merriam-Webster",
+    "d": "merriam-webster.com",
+    "u": "https://www.merriam-webster.com/dictionary/{{{s}}}"
   },
   {
     "t": "gh",
@@ -36,10 +66,40 @@
     "u": "https://github.com/search?q={{{s}}}&type=repositories"
   },
   {
+    "t": "goodreads",
+    "s": "Goodreads",
+    "d": "goodreads.com",
+    "u": "https://www.goodreads.com/search?q={{{s}}}"
+  },
+  {
+    "t": "hn",
+    "s": "Hacker News",
+    "d": "hn.algolia.com",
+    "u": "https://hn.algolia.com/?q={{{s}}}"
+  },
+  {
+    "t": "imdb",
+    "s": "IMDb",
+    "d": "imdb.com",
+    "u": "https://www.imdb.com/find?q={{{s}}}"
+  },
+  {
+    "t": "kagi",
+    "s": "Kagi",
+    "d": "kagi.com",
+    "u": "https://kagi.com/search?q={{{s}}}"
+  },
+  {
     "t": "linear",
     "s": "Linear",
     "d": "linear.app",
     "u": "https://linear.app/search?q={{{s}}}"
+  },
+  {
+    "t": "maps",
+    "s": "Google Maps",
+    "d": "google.com",
+    "u": "https://www.google.com/maps/search/{{{s}}}"
   },
   {
     "t": "mdn",
@@ -54,9 +114,69 @@
     "u": "https://www.npmjs.com/search?q={{{s}}}"
   },
   {
+    "t": "perplexity",
+    "s": "Perplexity",
+    "d": "perplexity.ai",
+    "u": "https://www.perplexity.ai/search?q={{{s}}}"
+  },
+  {
+    "t": "phind",
+    "s": "Phind",
+    "d": "phind.com",
+    "u": "https://www.phind.com/search?q={{{s}}}"
+  },
+  {
+    "t": "pypi",
+    "s": "PyPI",
+    "d": "pypi.org",
+    "u": "https://pypi.org/search/?q={{{s}}}"
+  },
+  {
+    "t": "reddit",
+    "s": "Reddit",
+    "d": "reddit.com",
+    "u": "https://www.reddit.com/search/?q={{{s}}}"
+  },
+  {
+    "t": "so",
+    "s": "Stack Overflow",
+    "d": "stackoverflow.com",
+    "u": "https://stackoverflow.com/search?q={{{s}}}"
+  },
+  {
+    "t": "spotify",
+    "s": "Spotify",
+    "d": "open.spotify.com",
+    "u": "https://open.spotify.com/search/{{{s}}}"
+  },
+  {
+    "t": "ts",
+    "s": "TypeScript Docs",
+    "d": "typescriptlang.org",
+    "u": "https://www.typescriptlang.org/search?q={{{s}}}"
+  },
+  {
     "t": "vercel",
     "s": "Vercel Dash",
     "d": "vercel.com",
     "u": "https://vercel.com/search?q={{{s}}}"
+  },
+  {
+    "t": "wiki",
+    "s": "Wikipedia",
+    "d": "wikipedia.org",
+    "u": "https://en.wikipedia.org/w/index.php?search={{{s}}}"
+  },
+  {
+    "t": "x",
+    "s": "X / Twitter",
+    "d": "x.com",
+    "u": "https://x.com/search?q={{{s}}}"
+  },
+  {
+    "t": "yt",
+    "s": "YouTube",
+    "d": "youtube.com",
+    "u": "https://www.youtube.com/results?search_query={{{s}}}"
   }
 ]

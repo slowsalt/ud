@@ -306,7 +306,7 @@ function noSearchDefaultPageRender() {
               return `<select class="default-select" aria-labelledby="default-label">
                 ${allBangs.map((b) => {
                   const overridden = customTriggers.has(b.t) && !customs.includes(b);
-                  return `<option value="${esc(b.t)}" ${b.t === LS_DEFAULT_BANG ? "selected" : ""} ${overridden ? "disabled" : ""}>!${esc(b.t)} — ${esc(b.s)}</option>`;
+                  return `<option value="${esc(b.t)}" ${b.t === LS_DEFAULT_BANG ? "selected" : ""} ${overridden ? "disabled" : ""}>${esc(b.s)} (!${esc(b.t)})</option>`;
                 }).join("")}
               </select>`;
             }
