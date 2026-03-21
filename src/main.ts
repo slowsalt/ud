@@ -300,7 +300,7 @@ function noSearchDefaultPageRender() {
 
         <div role="group" aria-labelledby="default-label" class="default-section">
           <span class="default-label" id="default-label">Default:</span>
-          ${[...customs, ...bangs].map((b) => {
+          ${[...customs, ...bangs].sort((a, b) => a.t.localeCompare(b.t)).map((b) => {
             const overridden = customTriggers.has(b.t) && !customs.includes(b);
             return `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}${overridden ? " overridden-default" : ""}" data-t="${esc(b.t)}" aria-pressed="${b.t === LS_DEFAULT_BANG}" ${overridden ? 'disabled aria-disabled="true"' : ""}>!${esc(b.t)}</button>`;
           }).join("")}
