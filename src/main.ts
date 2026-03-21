@@ -89,6 +89,7 @@ function noSearchDefaultPageRender() {
               <img src="/clipboard.svg" alt="" />
             </button>
           </div>
+          <span class="sr-only" id="copy-status" aria-live="polite"></span>
         </section>
 
         <section class="bangs-section">
@@ -99,7 +100,7 @@ function noSearchDefaultPageRender() {
                 <th>Bang</th>
                 <th>Site</th>
                 <th class="bang-domain">Domain</th>
-                <th></th>
+                <th><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody>
@@ -108,10 +109,10 @@ function noSearchDefaultPageRender() {
           </table>
         </section>
 
-        <section class="default-section">
-          <span class="default-label">Default:</span>
-          ${[...customs, ...bangs].map((b) => `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}" data-t="${b.t}">!${b.t}</button>`).join("")}
-        </section>
+        <div role="group" aria-labelledby="default-label" class="default-section">
+          <span class="default-label" id="default-label">Default:</span>
+          ${[...customs, ...bangs].map((b) => `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}" data-t="${b.t}" aria-pressed="${b.t === LS_DEFAULT_BANG}">!${b.t}</button>`).join("")}
+        </div>
 
         <details class="add-bang-details">
           <summary class="add-bang-summary">Add a custom bang</summary>
@@ -133,16 +134,16 @@ function noSearchDefaultPageRender() {
                 <input id="new-name" class="add-bang-input" type="text" placeholder="My Site" autocomplete="off" />
               </div>
             </div>
-            <p class="add-bang-error" id="add-bang-error"></p>
+            <p class="add-bang-error" id="add-bang-error" role="alert" aria-live="polite"></p>
             <button type="submit" class="add-bang-submit">Add bang</button>
           </form>
         </details>
       </main>
 
       <footer class="footer">
-        <a href="https://jon.gl" target="_blank">jon.gl</a>
+        <a href="https://jon.gl" target="_blank" rel="noopener noreferrer">jon.gl</a>
         •
-        <a href="https://github.com/t3dotgg/unduck" target="_blank">based on unduck</a>
+        <a href="https://github.com/t3dotgg/unduck" target="_blank" rel="noopener noreferrer">based on unduck</a>
       </footer>
     </div>
   `;
@@ -151,18 +152,27 @@ function noSearchDefaultPageRender() {
   const copyButton = app.querySelector<HTMLButtonElement>(".copy-button")!;
   const copyIcon = copyButton.querySelector("img")!;
   const urlInput = app.querySelector<HTMLInputElement>(".url-input")!;
+  const copyStatus = app.querySelector<HTMLSpanElement>("#copy-status")!;
   copyButton.addEventListener("click", async () => {
     await navigator.clipboard.writeText(urlInput.value);
     copyIcon.src = "/clipboard-check.svg";
-    setTimeout(() => { copyIcon.src = "/clipboard.svg"; }, 2000);
+    copyStatus.textContent = "URL copied to clipboard";
+    setTimeout(() => {
+      copyIcon.src = "/clipboard.svg";
+      copyStatus.textContent = "";
+    }, 2000);
   });
 
   // default selector
   app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       localStorage.setItem("default-bang", btn.dataset.t!);
-      app.querySelectorAll(".default-btn").forEach((b) => b.classList.remove("active"));
+      app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((b) => {
+        b.classList.remove("active");
+        b.setAttribute("aria-pressed", "false");
+      });
       btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
     });
   });
 

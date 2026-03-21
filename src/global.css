@@ -10,7 +10,7 @@
   --bg-subtle:    #e2ded7;
   --border:       #bab7af;
   --text:         #000000;
-  --text-sub:     #706d67;
+  --text-sub:     #5a5750;
   --accent:       #6d2b71;
   --accent-hover: #976a96;
   --code-bg:      #d3cfc7;
@@ -31,6 +31,28 @@
     --code-text:    #f7f4f0;
     --underline:    #e4de31;
   }
+}
+
+/* ─── SCREEN READER ONLY ─── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ─── FOCUS ─── */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
 }
 
 *, *::before, *::after {
@@ -123,7 +145,6 @@ a:hover {
   font-size: 13px;
   font-family: ui-monospace, "Cascadia Mono", "Fira Code", monospace;
   font-weight: 400;
-  outline: none;
   min-width: 0;
 }
 
@@ -180,7 +201,8 @@ a:hover {
   transition: opacity 0.2s, color 0.2s, background 0.2s;
 }
 
-.custom-row:hover .delete-btn {
+.custom-row:hover .delete-btn,
+.delete-btn:focus-visible {
   opacity: 1;
 }
 
@@ -428,11 +450,10 @@ a:hover {
   font: inherit;
   font-size: 13px;
   font-weight: 300;
-  outline: none;
   transition: border-color 0.25s ease-in-out;
 }
 
-.add-bang-input:focus {
+.add-bang-input:focus-visible {
   border-color: var(--accent-hover);
 }
 
