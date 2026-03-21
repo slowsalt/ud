@@ -82,4 +82,10 @@ export const bangs = [
     t: "domain",
     u: "https://instantdomainsearch.com/#search={{{s}}}"
   },
+  {
+    t: "s",
+    s: "Startpage",
+    d: "startpage.com",
+    u: "https://startpage.com/do/metasearch.pl?query={{{s}}}"
+  },
 ];
