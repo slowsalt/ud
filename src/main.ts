@@ -473,3 +473,4 @@ function doRedirect() {
 
 doRedirect();
 checkImportFragment();
+window.addEventListener("hashchange", checkImportFragment);
