@@ -3,70 +3,54 @@
 
 export const bangs = [
   {
-    c: "AI",
     d: "mistral.ai",
     s: "Mistral Le Chat",
     t: "mistral",
     u: "https://mistral.ai/chat?q={{{s}}}",
   },
   {
-    c: "Online Services",
     d: "www.google.com",
     s: "Google",
     t: "g",
     u: "https://www.google.com/search?q={{{s}}}",
   },
   {
-    c: "Online Services",
     d: "www.qwant.com",
-    s: "Qwant",
-    t: "qwant",
+    s: "Qwant Search",
+    t: "q",
     u: "https://www.qwant.com/?q={{{s}}}",
   },
   {
-    c: "Online Services",
     d: "www.1881.no",
     s: "1881.no",
     t: "1881",
     u: "http://www.1881.no/?query={{{s}}}",
   },
   {
-    c: "Online Services",
     d: "www.gulesider.no",
     s: "Gule Sider",
-    t: "gulesider",
+    t: "gs",
     u: "https://www.gulesider.no/?q={{{s}}}",
   },
   {
-    c: "Tech",
-    d: "github.com",
-    s: "GitHub",
-    t: "gh",
-    u: "https://github.com/search?utf8=%E2%9C%93&q={{{s}}}",
-  },
-  {
-    c: "AI",
     d: "claude.ai",
     s: "Claude Chat",
     t: "claude",
     u: "https://claude.ai/new?q={{{s}}}",
   },
   {
-    c: "Shopping",
     d: "www.dba.dk",
     s: "Den Bl\u00e5 Avis",
     t: "dba",
     u: "http://www.dba.dk/soeg/?soeg={{{s}}}",
   },
   {
-    c: "Tech",
     d: "www.norid.no",
     s: "Norid",
     t: "whoisno",
     u: "http://www.norid.no/index.html?charset=UTF-8&page=index&sok=Søk&query={{{s}}}"
   },
   {
-    c: "Tech",
     d: "instantdomainsearch.com",
     s: "Instant Domain Search",
     t: "domain",
