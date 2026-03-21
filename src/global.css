@@ -206,6 +206,12 @@ a:hover {
   opacity: 1;
 }
 
+@media (hover: none) {
+  .delete-btn {
+    opacity: 1;
+  }
+}
+
 .delete-btn:hover {
   color: #a03030;
   background: rgba(160, 48, 48, 0.08);
