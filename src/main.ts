@@ -270,6 +270,7 @@ function noSearchDefaultPageRender() {
             <input
               type="text"
               class="url-input"
+              name="search-url"
               value="https://ud.jon.gl/?q=%s"
               readonly
               aria-label="Search engine URL"
