@@ -28,6 +28,182 @@ function findBang(trigger: string): Bang | undefined {
   return customs.find((b) => b.t === trigger) ?? bangs.find((b) => b.t === trigger);
 }
 
+// ─── IMPORT / EXPORT ───
+
+function isValidBang(b: unknown): b is Bang {
+  return (
+    typeof b === "object" && b !== null &&
+    typeof (b as any).t === "string" && /^\S+$/.test((b as any).t) &&
+    typeof (b as any).s === "string" &&
+    typeof (b as any).d === "string" &&
+    typeof (b as any).u === "string" && (b as any).u.includes("{{{s}}}")
+  );
+}
+
+function parseBangsPayload(raw: unknown): Bang[] | null {
+  if (!Array.isArray(raw) || raw.length === 0) return null;
+  if (!raw.every(isValidBang)) return null;
+  return raw as Bang[];
+}
+
+function exportAsJson() {
+  const customs = loadCustomBangs();
+  if (!customs.length) return;
+  const blob = new Blob([JSON.stringify(customs, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "ud-bangs.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function buildShareLink(): string {
+  const customs = loadCustomBangs();
+  const encoded = btoa(encodeURIComponent(JSON.stringify(customs)));
+  return `${window.location.origin}${window.location.pathname}#import=${encoded}`;
+}
+
+function showImportDialog(incoming: Bang[]) {
+  const existing = loadCustomBangs();
+  const existingTriggers = new Set(existing.map((b) => b.t));
+  const conflictCount = incoming.filter((b) => existingTriggers.has(b.t)).length;
+
+  const overlay = document.createElement("div");
+  overlay.className = "import-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-labelledby", "import-dialog-title");
+
+  overlay.innerHTML = `
+    <div class="import-dialog">
+      <h2 class="import-title" id="import-dialog-title">Import bangs</h2>
+      <p class="import-subtitle">
+        ${incoming.length} bang${incoming.length !== 1 ? "s" : ""}${conflictCount ? ` · <span class="import-conflict-count">${conflictCount} conflict${conflictCount !== 1 ? "s" : ""}</span>` : ""}
+      </p>
+      <label class="import-select-all-label">
+        <input type="checkbox" id="import-select-all" checked />
+        <span>Select all</span>
+      </label>
+      <ul class="import-list" role="list">
+        ${incoming.map((b) => {
+          const conflict = existingTriggers.has(b.t);
+          return `
+          <li class="import-item${conflict ? " import-item--conflict" : ""}">
+            <label class="import-item-label">
+              <input type="checkbox" class="import-check" data-t="${b.t}" checked />
+              <span class="import-bang-info">
+                <span class="import-bang-row">
+                  <code class="bang-trigger">!${b.t}</code>
+                  <span class="import-bang-name">${b.s}</span>
+                  ${conflict ? '<span class="import-conflict-badge">overwrites</span>' : ""}
+                </span>
+                <span class="import-bang-domain">${b.d}</span>
+              </span>
+            </label>
+          </li>`;
+        }).join("")}
+      </ul>
+      <div class="import-actions">
+        <button class="import-cancel-btn" type="button">Cancel</button>
+        <button class="import-confirm-btn" type="button">Import all (${incoming.length})</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const dialog = overlay.querySelector<HTMLDivElement>(".import-dialog")!;
+  const selectAllCheck = overlay.querySelector<HTMLInputElement>("#import-select-all")!;
+  const itemChecks = Array.from(overlay.querySelectorAll<HTMLInputElement>(".import-check"));
+  const confirmBtn = overlay.querySelector<HTMLButtonElement>(".import-confirm-btn")!;
+  const cancelBtn = overlay.querySelector<HTMLButtonElement>(".import-cancel-btn")!;
+
+  function updateState() {
+    const n = itemChecks.filter((c) => c.checked).length;
+    confirmBtn.textContent =
+      n === incoming.length ? `Import all (${n})` :
+      n > 0 ? `Import selected (${n})` : "Import selected";
+    confirmBtn.disabled = n === 0;
+    if (n === 0) {
+      selectAllCheck.checked = false;
+      selectAllCheck.indeterminate = false;
+    } else if (n === incoming.length) {
+      selectAllCheck.checked = true;
+      selectAllCheck.indeterminate = false;
+    } else {
+      selectAllCheck.indeterminate = true;
+    }
+  }
+
+  selectAllCheck.addEventListener("change", () => {
+    itemChecks.forEach((c) => (c.checked = selectAllCheck.checked));
+    updateState();
+  });
+  itemChecks.forEach((c) => c.addEventListener("change", updateState));
+
+  function clearFragment() {
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+
+  function doClose() {
+    clearFragment();
+    overlay.remove();
+  }
+
+  function doImport() {
+    const selected = new Set(itemChecks.filter((c) => c.checked).map((c) => c.dataset.t!));
+    const toImport = incoming.filter((b) => selected.has(b.t));
+    const kept = loadCustomBangs().filter((b) => !selected.has(b.t));
+    saveCustomBangs([...kept, ...toImport]);
+    overlay.remove();
+    clearFragment();
+    noSearchDefaultPageRender();
+  }
+
+  confirmBtn.addEventListener("click", doImport);
+  cancelBtn.addEventListener("click", doClose);
+
+  overlay.addEventListener("click", (e) => {
+    if (!dialog.contains(e.target as Node)) doClose();
+  });
+
+  overlay.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { doClose(); return; }
+    const focusable = Array.from(
+      overlay.querySelectorAll<HTMLElement>("input:not([disabled]), button:not([disabled])")
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.key === "Tab") {
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  requestAnimationFrame(() => selectAllCheck.focus());
+}
+
+function checkImportFragment() {
+  const hash = window.location.hash;
+  if (!hash.startsWith("#import=")) return;
+  const encoded = hash.slice("#import=".length);
+  try {
+    const decoded = JSON.parse(decodeURIComponent(atob(encoded)));
+    const parsed = parseBangsPayload(decoded);
+    if (parsed) showImportDialog(parsed);
+  } catch {
+    // silently ignore malformed fragments
+  }
+}
+
 // ─── HOMEPAGE ───
 
 const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "qwant";
@@ -118,7 +294,7 @@ function noSearchDefaultPageRender() {
         </div>
 
         <details class="add-bang-details">
-          <summary class="add-bang-summary">Add a custom bang</summary>
+          <summary class="add-bang-summary">Custom bangs</summary>
           <form class="add-bang-form" id="add-bang-form">
             <div class="add-bang-fields">
               <div class="add-bang-field">
@@ -140,6 +316,15 @@ function noSearchDefaultPageRender() {
             <p class="add-bang-error" id="add-bang-error" role="alert" aria-live="polite"></p>
             <button type="submit" class="add-bang-submit">Add bang</button>
           </form>
+          <div class="bang-io">
+            <input type="file" id="import-file-input" accept=".json" hidden />
+            <button class="bang-io-btn" id="import-file-btn" type="button">Import from file</button>
+            ${customs.length > 0 ? `
+            <button class="bang-io-btn" id="export-json-btn" type="button">Download .json</button>
+            <button class="bang-io-btn" id="copy-share-btn" type="button">Copy share link</button>
+            ` : ""}
+          </div>
+          <p class="add-bang-error" id="io-error" role="alert" aria-live="polite"></p>
         </details>
       </main>
 
@@ -210,11 +395,48 @@ function noSearchDefaultPageRender() {
     try { d = new URL(u.replace("{{{s}}}", "x")).hostname; } catch { /* keep raw */ }
 
     const s = sRaw || d;
-    const customs = loadCustomBangs().filter((b) => b.t !== t); // replace if same trigger
-    saveCustomBangs([...customs, { t, s, d, u }]);
+    const existing = loadCustomBangs().filter((b) => b.t !== t);
+    saveCustomBangs([...existing, { t, s, d, u }]);
     noSearchDefaultPageRender();
-    // re-open the details so the user sees their new bang in context
   });
+
+  // import from file
+  const ioError = app.querySelector<HTMLParagraphElement>("#io-error")!;
+  const importFileInput = app.querySelector<HTMLInputElement>("#import-file-input")!;
+  const importFileBtn = app.querySelector<HTMLButtonElement>("#import-file-btn")!;
+
+  importFileBtn.addEventListener("click", () => importFileInput.click());
+  importFileInput.addEventListener("change", () => {
+    const file = importFileInput.files?.[0];
+    if (!file) return;
+    ioError.textContent = "";
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const raw = JSON.parse(reader.result as string);
+        const parsed = parseBangsPayload(raw);
+        if (parsed) showImportDialog(parsed);
+        else ioError.textContent = "Invalid file — expected an array of bang objects.";
+      } catch {
+        ioError.textContent = "Could not parse file.";
+      }
+      importFileInput.value = "";
+    };
+    reader.readAsText(file);
+  });
+
+  // export
+  if (customs.length > 0) {
+    app.querySelector<HTMLButtonElement>("#export-json-btn")!.addEventListener("click", exportAsJson);
+
+    const shareBtn = app.querySelector<HTMLButtonElement>("#copy-share-btn")!;
+    shareBtn.addEventListener("click", async () => {
+      const link = buildShareLink();
+      await navigator.clipboard.writeText(link);
+      shareBtn.textContent = "Copied!";
+      setTimeout(() => { shareBtn.textContent = "Copy share link"; }, 2000);
+    });
+  }
 }
 
 // ─── REDIRECT ───
@@ -250,3 +472,4 @@ function doRedirect() {
 }
 
 doRedirect();
+checkImportFragment();
