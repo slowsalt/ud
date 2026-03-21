@@ -1,4 +1,4 @@
-const CACHE = "ud-v1";
+const CACHE = "ud-v2";
 
 const ASSETS = [
   "/",
