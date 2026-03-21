@@ -402,6 +402,11 @@ function noSearchDefaultPageRender() {
   });
 
   // import from file
+  const details = app.querySelector<HTMLDetailsElement>(".add-bang-details")!;
+  details.addEventListener("toggle", () => {
+    if (details.open) details.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+
   const ioError = app.querySelector<HTMLParagraphElement>("#io-error")!;
   const importFileInput = app.querySelector<HTMLInputElement>("#import-file-input")!;
   const importFileBtn = app.querySelector<HTMLButtonElement>("#import-file-btn")!;
