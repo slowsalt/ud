@@ -1,0 +1,62 @@
+[
+  {
+    "t": "cal",
+    "s": "Google Calendar",
+    "d": "calendar.google.com",
+    "u": "https://calendar.google.com/calendar/r/search?q={{{s}}}"
+  },
+  {
+    "t": "cf",
+    "s": "Cloudflare Dash",
+    "d": "dash.cloudflare.com",
+    "u": "https://dash.cloudflare.com/?search={{{s}}}"
+  },
+  {
+    "t": "chatgpt",
+    "s": "ChatGPT",
+    "d": "chatgpt.com",
+    "u": "https://chatgpt.com/?q={{{s}}}"
+  },
+  {
+    "t": "crates",
+    "s": "crates.io",
+    "d": "crates.io",
+    "u": "https://crates.io/search?q={{{s}}}"
+  },
+  {
+    "t": "excali",
+    "s": "Excalidraw",
+    "d": "excalidraw.com",
+    "u": "https://excalidraw.com/#{{{s}}}"
+  },
+  {
+    "t": "gh",
+    "s": "GitHub",
+    "d": "github.com",
+    "u": "https://github.com/search?q={{{s}}}&type=repositories"
+  },
+  {
+    "t": "linear",
+    "s": "Linear",
+    "d": "linear.app",
+    "u": "https://linear.app/search?q={{{s}}}"
+  },
+  {
+    "t": "mdn",
+    "s": "MDN Web Docs",
+    "d": "developer.mozilla.org",
+    "u": "https://developer.mozilla.org/en-US/search?q={{{s}}}"
+  },
+  {
+    "t": "npm",
+    "s": "npm",
+    "d": "npmjs.com",
+    "u": "https://www.npmjs.com/search?q={{{s}}}"
+  },
+  {
+    "t": "vercel",
+    "s": "Vercel Dash",
+    "d": "vercel.com",
+    "u": "https://vercel.com/search?q={{{s}}}"
+  }
+]
