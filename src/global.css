@@ -726,6 +726,33 @@ a:hover {
   pointer-events: none;
 }
 
+/* ─── ABOUT ─── */
+
+.about-details {
+  margin-top: 0;
+}
+
+.about-body {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.65;
+}
+
+.about-url {
+  display: block;
+  font-family: ui-monospace, "Cascadia Mono", "Fira Code", monospace;
+  font-size: 13px;
+  font-weight: 400;
+  background: var(--code-bg);
+  color: var(--accent);
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
 /* ─── FOOTER ─── */
 
 .footer {
