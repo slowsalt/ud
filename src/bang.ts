@@ -71,7 +71,7 @@ export const bangs = [
     d: "www.norid.no",
     s: "Norid",
     sc: "Domains",
-    t: "nowhois",
+    t: "whoisno",
     u: "http://www.norid.no/index.html?charset=UTF-8&page=index&sok=Søk&query={{{s}}}"
   },
   {
