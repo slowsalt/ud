@@ -1,0 +1,62 @@
+[
+  {
+    "t": "ddg",
+    "s": "DuckDuckGo",
+    "d": "duckduckgo.com",
+    "u": "https://duckduckgo.com/?q={{{s}}}"
+  },
+  {
+    "t": "gh",
+    "s": "GitHub",
+    "d": "github.com",
+    "u": "https://github.com/search?q={{{s}}}&type=repositories"
+  },
+  {
+    "t": "hn",
+    "s": "Hacker News",
+    "d": "hn.algolia.com",
+    "u": "https://hn.algolia.com/?q={{{s}}}"
+  },
+  {
+    "t": "maps",
+    "s": "Google Maps",
+    "d": "google.com",
+    "u": "https://www.google.com/maps/search/{{{s}}}"
+  },
+  {
+    "t": "mdn",
+    "s": "MDN Web Docs",
+    "d": "developer.mozilla.org",
+    "u": "https://developer.mozilla.org/en-US/search?q={{{s}}}"
+  },
+  {
+    "t": "npm",
+    "s": "npm",
+    "d": "npmjs.com",
+    "u": "https://www.npmjs.com/search?q={{{s}}}"
+  },
+  {
+    "t": "reddit",
+    "s": "Reddit",
+    "d": "reddit.com",
+    "u": "https://www.reddit.com/search/?q={{{s}}}"
+  },
+  {
+    "t": "so",
+    "s": "Stack Overflow",
+    "d": "stackoverflow.com",
+    "u": "https://stackoverflow.com/search?q={{{s}}}"
+  },
+  {
+    "t": "wiki",
+    "s": "Wikipedia",
+    "d": "wikipedia.org",
+    "u": "https://en.wikipedia.org/w/index.php?search={{{s}}}"
+  },
+  {
+    "t": "yt",
+    "s": "YouTube",
+    "d": "youtube.com",
+    "u": "https://www.youtube.com/results?search_query={{{s}}}"
+  }
+]

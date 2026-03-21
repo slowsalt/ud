@@ -1,5 +1,23 @@
 [
   {
+    "t": "amazon",
+    "s": "Amazon",
+    "d": "amazon.com",
+    "u": "https://www.amazon.com/s?k={{{s}}}"
+  },
+  {
+    "t": "arch",
+    "s": "Arch Linux Wiki",
+    "d": "wiki.archlinux.org",
+    "u": "https://wiki.archlinux.org/index.php?search={{{s}}}"
+  },
+  {
+    "t": "arxiv",
+    "s": "arXiv",
+    "d": "arxiv.org",
+    "u": "https://arxiv.org/search/?query={{{s}}}&searchtype=all"
+  },
+  {
     "t": "brave",
     "s": "Brave Search",
     "d": "search.brave.com",
@@ -18,6 +36,12 @@
     "u": "https://calendar.google.com/calendar/r/search?q={{{s}}}"
   },
   {
+    "t": "canva",
+    "s": "Canva",
+    "d": "canva.com",
+    "u": "https://www.canva.com/search?q={{{s}}}"
+  },
+  {
     "t": "caniuse",
     "s": "Can I Use",
     "d": "caniuse.com",
@@ -34,6 +58,12 @@
     "s": "ChatGPT",
     "d": "chatgpt.com",
     "u": "https://chatgpt.com/?q={{{s}}}"
+  },
+  {
+    "t": "codepen",
+    "s": "CodePen",
+    "d": "codepen.io",
+    "u": "https://codepen.io/search/pens?q={{{s}}}"
   },
   {
     "t": "crates",
@@ -60,10 +90,40 @@
     "u": "https://www.merriam-webster.com/dictionary/{{{s}}}"
   },
   {
+    "t": "docker",
+    "s": "Docker Hub",
+    "d": "hub.docker.com",
+    "u": "https://hub.docker.com/search?q={{{s}}}"
+  },
+  {
+    "t": "dribbble",
+    "s": "Dribbble",
+    "d": "dribbble.com",
+    "u": "https://dribbble.com/search/{{{s}}}"
+  },
+  {
+    "t": "ebay",
+    "s": "eBay",
+    "d": "ebay.com",
+    "u": "https://www.ebay.com/sch/i.html?_nkw={{{s}}}"
+  },
+  {
+    "t": "fonts",
+    "s": "Google Fonts",
+    "d": "fonts.google.com",
+    "u": "https://fonts.google.com/?query={{{s}}}"
+  },
+  {
     "t": "gh",
     "s": "GitHub",
     "d": "github.com",
     "u": "https://github.com/search?q={{{s}}}&type=repositories"
+  },
+  {
+    "t": "go",
+    "s": "pkg.go.dev",
+    "d": "pkg.go.dev",
+    "u": "https://pkg.go.dev/search?q={{{s}}}"
   },
   {
     "t": "goodreads",
@@ -90,6 +150,12 @@
     "u": "https://kagi.com/search?q={{{s}}}"
   },
   {
+    "t": "leetcode",
+    "s": "LeetCode",
+    "d": "leetcode.com",
+    "u": "https://leetcode.com/problemset/?search={{{s}}}"
+  },
+  {
     "t": "linear",
     "s": "Linear",
     "d": "linear.app",
@@ -108,6 +174,12 @@
     "u": "https://developer.mozilla.org/en-US/search?q={{{s}}}"
   },
   {
+    "t": "news",
+    "s": "Google News",
+    "d": "news.google.com",
+    "u": "https://news.google.com/search?q={{{s}}}"
+  },
+  {
     "t": "npm",
     "s": "npm",
     "d": "npmjs.com",
@@ -120,10 +192,22 @@
     "u": "https://www.perplexity.ai/search?q={{{s}}}"
   },
   {
+    "t": "ph",
+    "s": "Product Hunt",
+    "d": "producthunt.com",
+    "u": "https://www.producthunt.com/search?q={{{s}}}"
+  },
+  {
     "t": "phind",
     "s": "Phind",
     "d": "phind.com",
     "u": "https://www.phind.com/search?q={{{s}}}"
+  },
+  {
+    "t": "py",
+    "s": "Python Docs",
+    "d": "docs.python.org",
+    "u": "https://docs.python.org/3/search.html?q={{{s}}}"
   },
   {
     "t": "pypi",
@@ -138,6 +222,24 @@
     "u": "https://www.reddit.com/search/?q={{{s}}}"
   },
   {
+    "t": "regex",
+    "s": "regex101",
+    "d": "regex101.com",
+    "u": "https://regex101.com/?regex={{{s}}}"
+  },
+  {
+    "t": "rust",
+    "s": "Rust Docs",
+    "d": "doc.rust-lang.org",
+    "u": "https://doc.rust-lang.org/std/?search={{{s}}}"
+  },
+  {
+    "t": "scholar",
+    "s": "Google Scholar",
+    "d": "scholar.google.com",
+    "u": "https://scholar.google.com/scholar?q={{{s}}}"
+  },
+  {
     "t": "so",
     "s": "Stack Overflow",
     "d": "stackoverflow.com",
@@ -150,10 +252,28 @@
     "u": "https://open.spotify.com/search/{{{s}}}"
   },
   {
+    "t": "svg",
+    "s": "SVG Repo",
+    "d": "svgrepo.com",
+    "u": "https://www.svgrepo.com/vectors/{{{s}}}"
+  },
+  {
+    "t": "translate",
+    "s": "Google Translate",
+    "d": "translate.google.com",
+    "u": "https://translate.google.com/?text={{{s}}}"
+  },
+  {
     "t": "ts",
     "s": "TypeScript Docs",
     "d": "typescriptlang.org",
     "u": "https://www.typescriptlang.org/search?q={{{s}}}"
+  },
+  {
+    "t": "unsplash",
+    "s": "Unsplash",
+    "d": "unsplash.com",
+    "u": "https://unsplash.com/s/photos/{{{s}}}"
   },
   {
     "t": "vercel",
@@ -168,6 +288,12 @@
     "u": "https://en.wikipedia.org/w/index.php?search={{{s}}}"
   },
   {
+    "t": "wolfram",
+    "s": "Wolfram Alpha",
+    "d": "wolframalpha.com",
+    "u": "https://www.wolframalpha.com/input?i={{{s}}}"
+  },
+  {
     "t": "x",
     "s": "X / Twitter",
     "d": "x.com",
@@ -178,5 +304,53 @@
     "s": "YouTube",
     "d": "youtube.com",
     "u": "https://www.youtube.com/results?search_query={{{s}}}"
+  },
+  {
+    "t": "codesandbox",
+    "s": "CodeSandbox",
+    "d": "codesandbox.io",
+    "u": "https://codesandbox.io/search?query={{{s}}}"
+  },
+  {
+    "t": "deno",
+    "s": "Deno Packages",
+    "d": "deno.land",
+    "u": "https://deno.land/x?query={{{s}}}"
+  },
+  {
+    "t": "figma",
+    "s": "Figma",
+    "d": "figma.com",
+    "u": "https://www.figma.com/search?q={{{s}}}"
+  },
+  {
+    "t": "giphy",
+    "s": "Giphy",
+    "d": "giphy.com",
+    "u": "https://giphy.com/search/{{{s}}}"
+  },
+  {
+    "t": "jsr",
+    "s": "JSR",
+    "d": "jsr.io",
+    "u": "https://jsr.io/?search={{{s}}}"
+  },
+  {
+    "t": "nuget",
+    "s": "NuGet",
+    "d": "nuget.org",
+    "u": "https://www.nuget.org/packages?q={{{s}}}"
+  },
+  {
+    "t": "packagist",
+    "s": "Packagist",
+    "d": "packagist.org",
+    "u": "https://packagist.org/search/?q={{{s}}}"
+  },
+  {
+    "t": "vscode",
+    "s": "VS Code Extensions",
+    "d": "marketplace.visualstudio.com",
+    "u": "https://marketplace.visualstudio.com/search?term={{{s}}}&target=VSCode"
   }
 ]
