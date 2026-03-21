@@ -28,16 +28,28 @@ function findBang(trigger: string): Bang | undefined {
   return customs.find((b) => b.t === trigger) ?? bangs.find((b) => b.t === trigger);
 }
 
+// ─── HTML ESCAPING ───
+
+function esc(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 // ─── IMPORT / EXPORT ───
 
 function isValidBang(b: unknown): b is Bang {
-  return (
-    typeof b === "object" && b !== null &&
-    typeof (b as any).t === "string" && /^\S+$/.test((b as any).t) &&
-    typeof (b as any).s === "string" &&
-    typeof (b as any).d === "string" &&
-    typeof (b as any).u === "string" && (b as any).u.includes("{{{s}}}")
-  );
+  if (
+    typeof b !== "object" || b === null ||
+    typeof (b as any).t !== "string" || !/^\S+$/.test((b as any).t) ||
+    typeof (b as any).s !== "string" ||
+    typeof (b as any).d !== "string" ||
+    typeof (b as any).u !== "string" || !(b as any).u.includes("{{{s}}}")
+  ) return false;
+  try {
+    const { protocol } = new URL((b as any).u.replace("{{{s}}}", "x"));
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 function parseBangsPayload(raw: unknown): Bang[] | null {
@@ -94,14 +106,14 @@ function showImportDialog(incoming: Bang[]) {
           return `
           <li class="import-item${conflict ? " import-item--conflict" : ""}">
             <label class="import-item-label">
-              <input type="checkbox" class="import-check" data-t="${b.t}" checked />
+              <input type="checkbox" class="import-check" data-t="${esc(b.t)}" checked />
               <span class="import-bang-info">
                 <span class="import-bang-row">
-                  <code class="bang-trigger">!${b.t}</code>
-                  <span class="import-bang-name">${b.s}</span>
+                  <code class="bang-trigger">!${esc(b.t)}</code>
+                  <span class="import-bang-name">${esc(b.s)}</span>
                   ${conflict ? '<span class="import-conflict-badge">overwrites</span>' : ""}
                 </span>
-                <span class="import-bang-domain">${b.d}</span>
+                <span class="import-bang-domain">${esc(b.d)}</span>
               </span>
             </label>
           </li>`;
@@ -218,11 +230,11 @@ function noSearchDefaultPageRender() {
     .map(
       (b) => `
       <tr class="custom-row">
-        <td><code class="bang-trigger">!${b.t}</code></td>
-        <td>${b.s}</td>
-        <td class="bang-domain">${b.d}</td>
+        <td><code class="bang-trigger">!${esc(b.t)}</code></td>
+        <td>${esc(b.s)}</td>
+        <td class="bang-domain">${esc(b.d)}</td>
         <td class="bang-delete-cell">
-          <button class="delete-btn" data-t="${b.t}" aria-label="Remove !${b.t}">
+          <button class="delete-btn" data-t="${esc(b.t)}" aria-label="Remove !${esc(b.t)}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
             </svg>
@@ -237,9 +249,9 @@ function noSearchDefaultPageRender() {
       const overridden = customTriggers.has(b.t);
       return `
       <tr class="${overridden ? "overridden-row" : ""}">
-        <td><code class="bang-trigger">!${b.t}</code></td>
-        <td>${b.s}${overridden ? ' <span class="overridden-badge">overridden</span>' : ""}</td>
-        <td class="bang-domain">${b.d}</td>
+        <td><code class="bang-trigger">!${esc(b.t)}</code></td>
+        <td>${esc(b.s)}${overridden ? ' <span class="overridden-badge">overridden</span>' : ""}</td>
+        <td class="bang-domain">${esc(b.d)}</td>
         <td></td>
       </tr>`;
     })
@@ -290,7 +302,7 @@ function noSearchDefaultPageRender() {
           <span class="default-label" id="default-label">Default:</span>
           ${[...customs, ...bangs].map((b) => {
             const overridden = customTriggers.has(b.t) && !customs.includes(b);
-            return `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}${overridden ? " overridden-default" : ""}" data-t="${b.t}" aria-pressed="${b.t === LS_DEFAULT_BANG}" ${overridden ? 'disabled aria-disabled="true"' : ""}>!${b.t}</button>`;
+            return `<button class="default-btn${b.t === LS_DEFAULT_BANG ? " active" : ""}${overridden ? " overridden-default" : ""}" data-t="${esc(b.t)}" aria-pressed="${b.t === LS_DEFAULT_BANG}" ${overridden ? 'disabled aria-disabled="true"' : ""}>!${esc(b.t)}</button>`;
           }).join("")}
         </div>
 
@@ -474,6 +486,10 @@ function getBangredirectUrl() {
 function doRedirect() {
   const searchUrl = getBangredirectUrl();
   if (!searchUrl) return;
+  try {
+    const { protocol } = new URL(searchUrl);
+    if (protocol !== "http:" && protocol !== "https:") return;
+  } catch { return; }
   window.location.replace(searchUrl);
 }
 
