@@ -70,6 +70,7 @@ function showImportDialog(incoming: Bang[]) {
   const existing = loadCustomBangs();
   const existingTriggers = new Set(existing.map((b) => b.t));
   const conflictCount = incoming.filter((b) => existingTriggers.has(b.t)).length;
+  const sorted = [...incoming].sort((a, b) => a.t.localeCompare(b.t));
 
   const overlay = document.createElement("div");
   overlay.className = "import-overlay";
@@ -88,7 +89,7 @@ function showImportDialog(incoming: Bang[]) {
         <span>Select all</span>
       </label>
       <ul class="import-list" role="list">
-        ${incoming.map((b) => {
+        ${sorted.map((b) => {
           const conflict = existingTriggers.has(b.t);
           return `
           <li class="import-item${conflict ? " import-item--conflict" : ""}">
