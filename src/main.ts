@@ -454,9 +454,10 @@ function noSearchDefaultPageRender() {
   });
 
   // import from file
-  const details = app.querySelector<HTMLDetailsElement>(".add-bang-details")!;
-  details.addEventListener("toggle", () => {
-    if (details.open) details.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  app.querySelectorAll<HTMLDetailsElement>(".add-bang-details").forEach((d) => {
+    d.addEventListener("toggle", () => {
+      if (d.open) d.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
   });
 
   const ioError = app.querySelector<HTMLParagraphElement>("#io-error")!;
