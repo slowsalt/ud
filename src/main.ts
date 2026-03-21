@@ -345,7 +345,7 @@ function noSearchDefaultPageRender() {
             <button class="bang-io-btn" id="import-file-btn" type="button">Import from file</button>
             ${customs.length > 0 ? `
             <button class="bang-io-btn" id="export-json-btn" type="button">Download .json</button>
-            <button class="bang-io-btn" id="copy-share-btn" type="button">Copy share link</button>
+            <button class="bang-io-btn" id="copy-share-btn" type="button">Copy share link</button>${customs.length > 50 ? ' <span class="bang-io-note">(not recommended for large lists — use file export)</span>' : ""}
             ` : ""}
           </div>
           <p class="add-bang-error" id="io-error" role="alert" aria-live="polite"></p>

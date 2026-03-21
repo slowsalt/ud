@@ -524,17 +524,23 @@ a:hover {
   font-size: 12px;
   background: none;
   border: none;
-  color: var(--text-sub);
+  color: var(--accent);
   cursor: pointer;
   padding: 0;
   text-decoration: underline;
   text-decoration-thickness: 0.125em;
-  text-underline-offset: 2px;
-  transition: color 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 
 .bang-io-btn:hover {
   color: var(--text);
+  text-decoration-color: var(--underline);
+  text-decoration-thickness: 0.25em;
+}
+
+.bang-io-note {
+  font-size: 11px;
+  color: var(--text-sub);
 }
 
 /* ─── IMPORT DIALOG ─── */
