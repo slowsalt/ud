@@ -206,7 +206,7 @@ function checkImportFragment() {
 
 // ─── HOMEPAGE ───
 
-const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "qwant";
+const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "s";
 
 function noSearchDefaultPageRender() {
   const app = document.querySelector<HTMLDivElement>("#app")!;
