@@ -2,7 +2,9 @@ import { bangs } from "./bang";
 import "./global.css";
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js");
+  navigator.serviceWorker.register("/sw.js").then(syncConfigToSW);
+  // Re-seed whenever a new SW takes control
+  navigator.serviceWorker.addEventListener("controllerchange", syncConfigToSW);
 }
 
 // ─── CUSTOM BANGS ───
@@ -21,6 +23,26 @@ function loadCustomBangs(): Bang[] {
 
 function saveCustomBangs(customs: Bang[]) {
   localStorage.setItem(CUSTOM_BANGS_KEY, JSON.stringify(customs));
+  syncConfigToSW();
+}
+
+function syncConfigToSW(): void {
+  const config = {
+    customs: loadCustomBangs(),
+    defaultBang: localStorage.getItem("default-bang") ?? "s",
+  };
+  // Keep SW in-memory config fresh immediately
+  if (navigator.serviceWorker?.controller) {
+    navigator.serviceWorker.controller.postMessage({ type: "ud-config-update", config });
+  }
+  // Persist so the SW can recover config after it restarts
+  if ("caches" in window) {
+    caches.open("ud-v2").then((cache) =>
+      cache.put("/__ud_config__", new Response(JSON.stringify(config), {
+        headers: { "Content-Type": "application/json" },
+      }))
+    );
+  }
 }
 
 function findBang(trigger: string): Bang | undefined {
@@ -399,6 +421,7 @@ function noSearchDefaultPageRender() {
   if (defaultSelect) {
     defaultSelect.addEventListener("change", () => {
       localStorage.setItem("default-bang", defaultSelect.value);
+      syncConfigToSW();
       updateDefaultBadge(defaultSelect.value);
     });
   } else {
@@ -406,6 +429,7 @@ function noSearchDefaultPageRender() {
       btn.addEventListener("click", () => {
         const t = btn.dataset.t!;
         localStorage.setItem("default-bang", t);
+        syncConfigToSW();
         app.querySelectorAll<HTMLButtonElement>(".default-btn").forEach((b) => {
           b.classList.remove("active");
           b.setAttribute("aria-pressed", "false");

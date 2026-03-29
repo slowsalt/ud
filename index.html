@@ -9,6 +9,39 @@
       name="description"
       content="A better default search engine (with bangs!)"
     />
+  <script src="/bangs.js"></script>
+  <script>
+    // Fallback redirect for first visit (before the service worker is active).
+    // Mirrors the logic in sw.js / main.ts so there is no visible flash.
+    (function () {
+      var q = new URLSearchParams(location.search).get("q");
+      if (!q || !(q = q.trim())) return;
+
+      var customs = [];
+      try { customs = JSON.parse(localStorage.getItem("custom-bangs") || "[]"); } catch (e) {}
+      var defaultBang = localStorage.getItem("default-bang") || "s";
+
+      function find(t) {
+        return customs.find(function (b) { return b.t === t; }) ||
+               BUILTIN_BANGS.find(function (b) { return b.t === t; });
+      }
+
+      var match = q.match(/!(\S+)/i);
+      var bang = (match ? find(match[1].toLowerCase()) : null) || find(defaultBang);
+      if (!bang) return;
+
+      var clean = q.replace(/!\S+\s*/i, "").trim();
+      var url = clean
+        ? bang.u.replace("{{{s}}}", encodeURIComponent(clean).replace(/%2F/g, "/"))
+        : "https://" + bang.d;
+
+      try {
+        if (!/^https?:/.test(new URL(url).protocol)) return;
+      } catch (e) { return; }
+
+      location.replace(url);
+    }());
+  </script>
   </head>
   <body style="background-color: transparent">
     <div id="app"></div>
