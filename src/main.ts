@@ -360,7 +360,7 @@ function noSearchDefaultPageRender() {
             <p>To use Ud, add it as a custom search engine in your browser with this URL:</p>
             <code class="about-url">https://ud.jon.gl/?q=%s</code>
             <p>Your browser will replace <code class="bang-trigger">%s</code> with whatever you type. If your query contains a bang, Ud redirects you there. If it doesn't, it falls back to whichever search engine you've set as your default (or startpage.com if you haven't set a default).</p>
-            <p>Everything runs in your browser — once loaded, redirects require no network request.</p>
+            <p>Everything runs in your browser. Once loaded, redirects require no network request.</p>
           </div>
         </details>
       </main>
