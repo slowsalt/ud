@@ -30,7 +30,7 @@ export const bangs = [
     d: "www.gulesider.no",
     s: "Gule Sider",
     t: "gs",
-    u: "https://www.gulesider.no/?q={{{s}}}",
+    u: "https://www.gulesider.no/{{{s}}}/hvem+har+ringt",
   },
   {
     d: "claude.ai",
@@ -48,13 +48,13 @@ export const bangs = [
     d: "www.norid.no",
     s: "Norid",
     t: "whoisno",
-    u: "http://www.norid.no/index.html?charset=UTF-8&page=index&sok=Søk&query={{{s}}}"
+    u: "https://www.norid.no/en/domeneoppslag/hvem-har-domenenavnet/?query={{{s}}}"
   },
   {
     d: "instantdomainsearch.com",
     s: "Instant Domain Search",
     t: "domain",
-    u: "https://instantdomainsearch.com/#search={{{s}}}"
+    u: "https://instantdomainsearch.com/?q={{{s}}}"
   },
   {
     t: "s",
