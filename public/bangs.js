@@ -13,4 +13,6 @@ var BUILTIN_BANGS = [
   { t: "domain",   s: "Instant Domain Search", d: "instantdomainsearch.com",u: "https://instantdomainsearch.com/?q={{{s}}}" },
   { t: "s",        s: "Startpage",             d: "startpage.com",          u: "https://startpage.com/do/metasearch.pl?query={{{s}}}" },
   { t: "yt",       s: "YouTube",               d: "youtube.com",            u: "https://www.youtube.com/results?search_query={{{s}}}" },
+  { t: "pno",      s: "Proff.no",              d: "proff.no",               u: "https://www.proff.no/bransjesøk?q={{{s}}}" },
+  { t: "pdk",      s: "Proff.dk",              d: "proff.dk",               u: "https://www.proff.dk/branchesøg?q={{{s}}}" },
 ];
