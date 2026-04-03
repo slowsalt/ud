@@ -15,4 +15,5 @@ var BUILTIN_BANGS = [
   { t: "yt",       s: "YouTube",               d: "youtube.com",            u: "https://www.youtube.com/results?search_query={{{s}}}" },
   { t: "pno",      s: "Proff.no",              d: "proff.no",               u: "https://www.proff.no/bransjesøk?q={{{s}}}" },
   { t: "pdk",      s: "Proff.dk",              d: "proff.dk",               u: "https://www.proff.dk/branchesøg?q={{{s}}}" },
+  { t: "wa",       s: "Wolfram Alpha",         d: "wolframalpha.com",       u: "https://www.wolframalpha.com/input?i={{{s}}}" },
 ];
