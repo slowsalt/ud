@@ -2,8 +2,8 @@
 // Loaded by sw.js via importScripts and by index.html as a plain script,
 // making BUILTIN_BANGS available as a global in both contexts.
 var BUILTIN_BANGS = [
-  { t: "mi",        s: "Mistral Le Chat",                 d: "chat.mistral.ai",        u: "https://chat.mistral.ai/chat?q={{{s}}}" },
-  { t: "mii",       s: "Mistral Incognito",             d: "chat.mistral.ai",        u: "https://chat.mistral.ai/incognito" },
+  { t: "m",        s: "Mistral Le Chat",                  d: "chat.mistral.ai",        u: "https://chat.mistral.ai/chat?q={{{s}}}" },
+  { t: "mi",       s: "Mistral Incognito",                d: "chat.mistral.ai",        u: "https://chat.mistral.ai/incognito" },
   { t: "g",        s: "Google",                           d: "www.google.com",         u: "https://www.google.com/search?q={{{s}}}" },
   { t: "q",        s: "Qwant Search",                     d: "www.qwant.com",          u: "https://www.qwant.com/?q={{{s}}}" },
   { t: "1881",     s: "1881.no",                          d: "www.1881.no",            u: "http://www.1881.no/?query={{{s}}}" },

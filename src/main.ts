@@ -378,7 +378,7 @@ function noSearchDefaultPageRender() {
           <summary class="add-bang-summary">What is this?</summary>
           <div class="about-body">
             <p>Bangs are short search shortcuts prefixed with <code class="bang-trigger">!</code>. Type a bang followed by your query in the address bar and you'll be sent straight to that site's search results.</p>
-            <p>For example, typing <code class="bang-trigger">!mi Explain bangs in search to me</code> takes you directly to a new Mistral chat with the prompt "Explain bangs in search to me", and <code class="bang-trigger">!yt lo-fi music</code> goes straight to YouTube.</p>
+            <p>For example, typing <code class="bang-trigger">!m Explain bangs in search to me</code> takes you directly to a new Mistral chat with the prompt "Explain bangs in search to me", and <code class="bang-trigger">!yt lo-fi music</code> goes straight to YouTube.</p>
             <p>To use Ud, add it as a custom search engine in your browser with this URL:</p>
             <code class="about-url">https://ud.jon.gl/?q=%s</code>
             <p>Your browser will replace <code class="bang-trigger">%s</code> with whatever you type. If your query contains a bang, Ud redirects you there. If it doesn't, it falls back to whichever search engine you've set as your default (or startpage.com if you haven't set a default).</p>
