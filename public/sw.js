@@ -1,4 +1,4 @@
-const CACHE = "ud-v2";
+const CACHE = "ud-v3";
 const CONFIG_KEY = "/__ud_config__";
 
 const ASSETS = [
@@ -43,7 +43,7 @@ function getBangRedirectUrl(query, customs, defaultBang) {
   if (!selectedBang) return null;
 
   const cleanQuery = query.replace(/!\S+\s*/i, "").trim();
-  if (cleanQuery === "") return `https://${selectedBang.d}`;
+  if (cleanQuery === "") return selectedBang.u.includes("{{{s}}}") ? `https://${selectedBang.d}` : selectedBang.u;
 
   return selectedBang.u.replace(
     "{{{s}}}",

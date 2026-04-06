@@ -33,7 +33,7 @@
       var clean = q.replace(/!\S+\s*/i, "").trim();
       var url = clean
         ? bang.u.replace("{{{s}}}", encodeURIComponent(clean).replace(/%2F/g, "/"))
-        : "https://" + bang.d;
+        : (bang.u.indexOf("{{{s}}}") !== -1 ? "https://" + bang.d : bang.u);
 
       try {
         if (!/^https?:/.test(new URL(url).protocol)) return;

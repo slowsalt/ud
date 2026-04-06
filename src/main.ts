@@ -37,7 +37,7 @@ function syncConfigToSW(): void {
   }
   // Persist so the SW can recover config after it restarts
   if ("caches" in window) {
-    caches.open("ud-v2").then((cache) =>
+    caches.open("ud-v3").then((cache) =>
       cache.put("/__ud_config__", new Response(JSON.stringify(config), {
         headers: { "Content-Type": "application/json" },
       }))
@@ -64,7 +64,7 @@ function isValidBang(b: unknown): b is Bang {
     typeof (b as any).t !== "string" || !/^\S+$/.test((b as any).t) ||
     typeof (b as any).s !== "string" ||
     typeof (b as any).d !== "string" ||
-    typeof (b as any).u !== "string" || !(b as any).u.includes("{{{s}}}")
+    typeof (b as any).u !== "string"
   ) return false;
   try {
     const { protocol } = new URL((b as any).u.replace("{{{s}}}", "x"));
@@ -133,6 +133,7 @@ function showImportDialog(incoming: Bang[]) {
                 <span class="import-bang-row">
                   <code class="bang-trigger">!${esc(b.t)}</code>
                   <span class="import-bang-name">${esc(b.s)}</span>
+                  ${!b.u.includes("{{{s}}}") ? '<span class="no-search-badge">no search</span>' : ""}
                   ${conflict ? '<span class="import-conflict-badge">overwrites</span>' : ""}
                 </span>
                 <span class="import-bang-domain">${esc(b.d)}</span>
@@ -241,9 +242,8 @@ function checkImportFragment() {
 
 // ─── HOMEPAGE ───
 
-const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "s";
-
 function noSearchDefaultPageRender() {
+  const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "s";
   const app = document.querySelector<HTMLDivElement>("#app")!;
   const customs = loadCustomBangs();
   const customTriggers = new Set(customs.map((b) => b.t));
@@ -253,7 +253,7 @@ function noSearchDefaultPageRender() {
       (b) => `
       <tr class="custom-row" data-t="${esc(b.t)}">
         <td><code class="bang-trigger">!${esc(b.t)}</code>${b.t === LS_DEFAULT_BANG ? ' <span class="default-badge">default</span>' : ""}</td>
-        <td>${esc(b.s)}</td>
+        <td>${esc(b.s)}${!b.u.includes("{{{s}}}") ? ' <span class="no-search-badge">no search</span>' : ""}</td>
         <td class="bang-domain">${esc(b.d)}</td>
         <td class="bang-delete-cell">
           <button class="delete-btn" data-t="${esc(b.t)}" aria-label="Remove !${esc(b.t)}">
@@ -272,7 +272,7 @@ function noSearchDefaultPageRender() {
       return `
       <tr class="${overridden ? "overridden-row" : ""}" data-t="${esc(b.t)}">
         <td><code class="bang-trigger">!${esc(b.t)}</code>${b.t === LS_DEFAULT_BANG ? ' <span class="default-badge">default</span>' : ""}</td>
-        <td>${esc(b.s)}${overridden ? ' <span class="overridden-badge">overridden</span>' : ""}</td>
+        <td>${esc(b.s)}${overridden ? ' <span class="overridden-badge">overridden</span>' : ""}${!b.u.includes("{{{s}}}") ? ' <span class="no-search-badge">no search</span>' : ""}</td>
         <td class="bang-domain">${esc(b.d)}</td>
         <td></td>
       </tr>`;
@@ -352,7 +352,7 @@ function noSearchDefaultPageRender() {
                 </div>
               </div>
               <div class="add-bang-field add-bang-field--grow">
-                <label class="add-bang-label" for="new-url">URL <span class="add-bang-hint">use <code>{{{s}}}</code> for the search query</span></label>
+                <label class="add-bang-label" for="new-url">URL <span class="add-bang-hint">use <code>{{{s}}}</code> for the search query (optional)</span></label>
                 <input id="new-url" class="add-bang-input" type="text" placeholder="https://example.com/search?q={{{s}}}" autocomplete="off" spellcheck="false" />
               </div>
               <div class="add-bang-field">
@@ -378,7 +378,7 @@ function noSearchDefaultPageRender() {
           <summary class="add-bang-summary">What is this?</summary>
           <div class="about-body">
             <p>Bangs are short search shortcuts prefixed with <code class="bang-trigger">!</code>. Type a bang followed by your query in the address bar and you'll be sent straight to that site's search results.</p>
-            <p>For example, typing <code class="bang-trigger">!mistral Explain bangs in search to me</code> takes you directly to a new Mistral chat with the prompt "Explain bangs in search to me", and <code class="bang-trigger">!yt lo-fi music</code> goes straight to YouTube.</p>
+            <p>For example, typing <code class="bang-trigger">!mi Explain bangs in search to me</code> takes you directly to a new Mistral chat with the prompt "Explain bangs in search to me", and <code class="bang-trigger">!yt lo-fi music</code> goes straight to YouTube.</p>
             <p>To use Ud, add it as a custom search engine in your browser with this URL:</p>
             <code class="about-url">https://ud.jon.gl/?q=%s</code>
             <p>Your browser will replace <code class="bang-trigger">%s</code> with whatever you type. If your query contains a bang, Ud redirects you there. If it doesn't, it falls back to whichever search engine you've set as your default (or startpage.com if you haven't set a default).</p>
@@ -466,10 +466,15 @@ function noSearchDefaultPageRender() {
     if (!t) { errorEl.textContent = "Trigger is required."; return; }
     if (!/^\S+$/.test(t)) { errorEl.textContent = "Trigger cannot contain spaces."; return; }
     if (!u) { errorEl.textContent = "URL is required."; return; }
-    if (!u.includes("{{{s}}}")) { errorEl.textContent = 'URL must contain {{{s}}} as the search placeholder.'; return; }
 
     let d = u;
-    try { d = new URL(u.replace("{{{s}}}", "x")).hostname; } catch { /* keep raw */ }
+    try {
+      const parsed = new URL(u.replace("{{{s}}}", "x"));
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        errorEl.textContent = "URL must use http or https."; return;
+      }
+      d = parsed.hostname;
+    } catch { errorEl.textContent = "URL is not valid."; return; }
 
     const s = sRaw || d;
     const existing = loadCustomBangs().filter((b) => b.t !== t);
@@ -534,12 +539,12 @@ function getBangredirectUrl() {
 
   const match = query.match(/!(\S+)/i);
   const bangCandidate = match?.[1]?.toLowerCase();
-  const selectedBang = findBang(bangCandidate ?? "") ?? findBang(LS_DEFAULT_BANG);
+  const selectedBang = findBang(bangCandidate ?? "") ?? findBang(localStorage.getItem("default-bang") ?? "s");
 
   const cleanQuery = query.replace(/!\S+\s*/i, "").trim();
 
   if (cleanQuery === "")
-    return selectedBang ? `https://${selectedBang.d}` : null;
+    return selectedBang ? (selectedBang.u.includes("{{{s}}}") ? `https://${selectedBang.d}` : selectedBang.u) : null;
 
   const searchUrl = selectedBang?.u.replace(
     "{{{s}}}",

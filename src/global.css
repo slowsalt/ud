@@ -98,7 +98,7 @@ a:hover {
 
 .main {
   width: 100%;
-  max-width: 520px;
+  max-width: 680px;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -239,6 +239,20 @@ a:hover {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-sub);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.no-search-badge {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-sub);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
   margin-left: 6px;
   vertical-align: middle;
 }
@@ -404,6 +418,9 @@ a:hover {
 
 .add-bang-form {
   margin-top: 14px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -522,6 +539,9 @@ a:hover {
 .bang-io {
   margin-top: 16px;
   padding-top: 12px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
   border-top: 1px solid var(--border);
   display: flex;
   gap: 16px;
@@ -572,7 +592,7 @@ a:hover {
   border-radius: 8px;
   padding: 24px;
   width: 100%;
-  max-width: 480px;
+  max-width: 560px;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -734,6 +754,9 @@ a:hover {
 
 .about-body {
   margin-top: 14px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
