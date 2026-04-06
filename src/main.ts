@@ -23,12 +23,12 @@ function loadCustomBangs(): Bang[] {
 
 function saveCustomBangs(customs: Bang[]) {
   localStorage.setItem(CUSTOM_BANGS_KEY, JSON.stringify(customs));
-  syncConfigToSW();
+  syncConfigToSW(customs);
 }
 
-function syncConfigToSW(): void {
+function syncConfigToSW(customs?: Bang[]): void {
   const config = {
-    customs: loadCustomBangs(),
+    customs: Array.isArray(customs) ? customs : loadCustomBangs(),
     defaultBang: localStorage.getItem("default-bang") ?? "s",
   };
   // Keep SW in-memory config fresh immediately
@@ -43,11 +43,6 @@ function syncConfigToSW(): void {
       }))
     );
   }
-}
-
-function findBang(trigger: string): Bang | undefined {
-  const customs = loadCustomBangs();
-  return customs.find((b) => b.t === trigger) ?? bangs.find((b) => b.t === trigger);
 }
 
 // ─── HTML ESCAPING ───
@@ -537,9 +532,12 @@ function getBangredirectUrl() {
     return null;
   }
 
+  const customs = loadCustomBangs();
+  const find = (trigger: string) => customs.find((b) => b.t === trigger) ?? bangs.find((b) => b.t === trigger);
+
   const match = query.match(/!(\S+)/i);
   const bangCandidate = match?.[1]?.toLowerCase();
-  const selectedBang = findBang(bangCandidate ?? "") ?? findBang(localStorage.getItem("default-bang") ?? "s");
+  const selectedBang = (bangCandidate ? find(bangCandidate) : undefined) ?? find(localStorage.getItem("default-bang") ?? "s");
 
   const cleanQuery = query.replace(/!\S+\s*/i, "").trim();
 
