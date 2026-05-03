@@ -2,9 +2,9 @@ import { bangs } from "./bang";
 import "./global.css";
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js").then(syncConfigToSW);
+  navigator.serviceWorker.register("/sw.js").then(() => syncConfigToSW());
   // Re-seed whenever a new SW takes control
-  navigator.serviceWorker.addEventListener("controllerchange", syncConfigToSW);
+  navigator.serviceWorker.addEventListener("controllerchange", () => syncConfigToSW());
 }
 
 // ─── CUSTOM BANGS ───
